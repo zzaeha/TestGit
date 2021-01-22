@@ -1,0 +1,106 @@
+model2.txt
+
+ - Model1방식 - Form/Pro 페이지  => php, 간단한 페이지 구성
+ 
+  => 규모가 커질수록 효율이 떨어짐  
+
+
+ - Model2 개발 방식 (= MVC 패턴) p556~
+  => jsp,C#... , 복잡한 페이지 구성
+ 
+  => 규모가 커질수록 효율이 좋아짐 ( 파일을 분리(작업을 분리) 사용)
+  => 디자인 파트와 비지니스 로직을 분리
+  
+  
+  M : Model => 비지니스 로직(pro페이지) / java / DB관련 작업
+  V : View => 화면 / jsp,html / css
+  C : Controller => 두개의 파일을 연결  / Servlet / 제어
+  
+  
+  * 실행 방식 
+  
+      클라이언트    ->   C : 컨트롤러   ㅡ  M : 모델     <=>   DB(Mysql)
+                        |        
+                    V: 화면  
+                    
+    
+   * Model2 이동방식 처리
+   주소 : http://localhost:8088/Model2Study/MemberJoin.me
+   화면 : http://localhost:8088/Model2Study/MemberJoin.me
+      
+   1. response 방식 이동
+      -> 화면, 주소가 동일하게 변경 
+      -> session, application 내장객체를 저장사용
+      -> [가상주소 -> 가상주소]로 이동시 사용
+   
+   주소 : http://localhost:8088/Model2Study/MemberJoin.me
+   화면 : http://localhost:8088/Model2Study/member/insertForm.jsp          
+   
+   2. forward 방식 이동
+      -> 화면, 주소가 동일하게 변경 X => 주소는 그대로 있고, 화면만 이동
+      -> request, session, application 내장객체 저장 사용
+      -> [가상주소 -> 실제주소]로 이동시 사용              
+                    
+                    
+  
+  
+  
+  
+  CREATE TABLE `model2`.`itwill_member` (
+  `id` VARCHAR(50) NOT NULL,
+  `pass` VARCHAR(50) NOT NULL,
+  `name` VARCHAR(45) NULL,
+  `age` INT NULL,
+  `gender` VARCHAR(45) NULL,
+  `email` VARCHAR(200) NOT NULL,
+  `reg_date` TIMESTAMP NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC));
+  
+  
+  
+  * Model2 회원가입 페이지 처리 로직
+  
+  index.jsp -> 회원가입 페이지 (./MemberJoin.me) -> 주소줄(URL) 
+  -> web.xml 파일 -> 해당컨트롤러 (MemberFrontController) ->
+  1. 주소 계산, 2. 주소 처리 , 3. 주소 이동
+  
+  * 화면만 처리하는 경우 (DB안쓰는경우)
+   url -> web.xml -> 컨트롤러 -> 주소비교 
+   -> ActionForward 생성(주소,방식) ->view페이지 이동
+  
+  
+  * DB를 처리하는 경우
+   [jsp ->] url -> web.xml -> 컨트롤러 -> 주소비교
+   -> 자바 처리 객체(Action 인터페이스 구현-execute()) -> 정보전달,데이터가공
+   -> DB연결처리 -> DAO객체 -> DAO메서드처리 -> 자바객체 -> ActionForward(주소,방식)
+   -> 컨트롤러 -> 이동 
+  
+  
+  * 상대경로
+  ./member/loginForm.jsp
+  => ./   ==   WebContent 폴더
+  
+  ./MemberLoginAction.me
+  =>  ./  ==  프로젝트명(Model2Study)
+  
+  
+  *  model2 방식의 개발에서 잘못 실행하는경우
+  1) 주소에 .jsp 페이지 호출이 되는경우 
+     -> 항상 가상주소로의 호출 ex) ~~~.me, ~~.bo ~~.do
+  2) jsp 페이지에서 실행 X (index.jsp 제외)
+  3) jsp 페이지에서는 DB처리 X (DB연결,SQL 실행....)
+    -> 모두 자바파일에서 처리해야함(~~Action.java)
+  4) 페이지 이동은 반드시 컨트롤러를 통한 제어
+    -> 단,js 이동시 컨트롤러 통한 제어를 없이 사용가능 (forward = null)  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
